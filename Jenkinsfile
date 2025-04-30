@@ -1,24 +1,41 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKER_IMAGE = 'elianab/my-web-app' // Docker Hub image name
+    }
+
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/Elian7773/MyWebApp.git'
+                git url: 'https://github.com/Elian7773/MyWebApp.git',
+                    credentialsId: 'e219755e-6a8a-4d91-addc-5ed2a267b767'
             }
         }
 
         stage('Build') {
             steps {
                 echo 'Building the project...'
-                // Add build commands if applicable (e.g., npm install, etc.)
+                // For example, if you're using npm, you can do: sh 'npm install'
+                // Or for other build steps relevant to your project, add them here
             }
         }
 
-        stage('Deploy') {
+        stage('Build Docker Image') {
             steps {
-                echo 'Deploying the project...'
-                // Add Docker deployment commands or other deployment steps
+                script {
+                    dockerImage = docker.build("elian7773/mywebapp:latest")
+                }
+            }
+        }
+
+        stage('Push Docker Image to Docker Hub') {
+            steps {
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
+                        dockerImage.push()
+                    }
+                }
             }
         }
     }
