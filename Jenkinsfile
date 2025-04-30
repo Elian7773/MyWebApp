@@ -36,7 +36,7 @@ pipeline {
 
         stage('Deploy to EC2') {
             steps {
-                sshagent(['e219755e-6a8a-4d91-addc-5ed2a267b767']) {
+                sshagent(['dfbdc876-4797-4634-b0b3-7da8012ec7c9']) {
                     sh 'ssh -o StrictHostKeyChecking=no ubuntu@3.21.214.223 "docker pull elianab/mywebapp:latest && docker stop mywebapp || true && docker rm mywebapp || true && docker run -d --name mywebapp -p 80:80 elianab/mywebapp:latest"'
                 }
             }
