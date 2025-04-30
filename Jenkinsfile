@@ -5,7 +5,6 @@ pipeline {
         stage('Checkout') {
             steps {
                 git url: 'https://github.com/Elian7773/MyWebApp.git',
-                    credentialsId: 'e219755e-6a8a-4d91-addc-5ed2a267b767'
             }
         }
 
@@ -36,7 +35,7 @@ pipeline {
 
         stage('Deploy to EC2') {
             steps {
-                sshagent(['e219755e-6a8a-4d91-addc-5ed2a267b767']) {
+                sshagent(['my-ssh-key']) {
                     sh 'ssh -o StrictHostKeyChecking=no ubuntu@3.21.214.223 "docker pull elianab/mywebapp:latest && docker stop mywebapp || true && docker rm mywebapp || true && docker run -d --name mywebapp -p 80:80 elianab/mywebapp:latest"'
                 }
             }
