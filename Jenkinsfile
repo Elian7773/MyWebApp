@@ -21,13 +21,12 @@ pipeline {
         }
 
         stage('Build Docker Image') {
-            steps {
-                script {
-                    echo 'Building Docker image...'
-                    sh 'docker build -t $DOCKER_IMAGE .'
-                }
-            }
+    steps {
+        script {
+            dockerImage = docker.build("elian7773/mywebapp:latest")
         }
+    }
+}
 
         stage('Push Docker Image to Docker Hub') {
             steps {
