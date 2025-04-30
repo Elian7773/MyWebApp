@@ -5,12 +5,12 @@ pipeline {
         DOCKER_IMAGE = 'elianab/my-web-app' // Docker Hub image name
     }
 
-    stages {
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/Elian7773/MyWebApp.git'
-            }
-        }
+    stage('Checkout') {
+    steps {
+        git url: 'https://github.com/Elian7773/MyWebApp.git',
+            credentialsId: 'e219755e-6a8a-4d91-addc-5ed2a267b767'
+    }
+}
 
         stage('Build') {
             steps {
