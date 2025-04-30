@@ -29,17 +29,14 @@ pipeline {
 }
 
         stage('Push Docker Image to Docker Hub') {
-            steps {
-                script {
-                    echo 'Pushing Docker image to Docker Hub...'
-                    // Login to Docker Hub using Jenkins credentials
-                    sh 'docker login -u $elianab -p $Year_2004_'
-                    sh 'docker push $DOCKER_IMAGE'
-                }
+    steps {
+        script {
+            docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
+                dockerImage.push()
             }
         }
-
     }
+}
 
     post {
         success {
