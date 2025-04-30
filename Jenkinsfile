@@ -35,16 +35,13 @@ pipeline {
         stage('Deploy to EC2') {
             steps {
                 script {
-                    // Load the private key using ssh-add
-                    sh """
-                    eval \$(ssh-agent -s)
-                    ssh-add /var/lib/jenkins/workspace/PipeLine@tmp/private_key_8152112537605624583.key
-                    """
-
-                    // Deploy the Docker container to EC2
-                    sh """
-                    ssh -o StrictHostKeyChecking=no ubuntu@3.21.214.223 "docker pull elianab/mywebapp:latest && docker stop mywebapp || true && docker rm mywebapp || true && docker run -d --name mywebapp -p 80:80 elianab/mywebapp:latest"
-                    """
+                    // Use Jenkins SSH Agent credentials instead of manually adding the private key
+                    sshagent(['my-ssh-key']) {
+                        // Deploy the Docker container to EC2 using SSH
+                        sh """
+                        ssh -o StrictHostKeyChecking=no ubuntu@3.21.214.223 "docker pull elianab/mywebapp:latest && docker stop mywebapp || true && docker rm mywebapp || true && docker run -d --name mywebapp -p 80:80 elianab/mywebapp:latest"
+                        """
+                    }
                 }
             }
         }
