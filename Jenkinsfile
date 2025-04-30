@@ -5,12 +5,13 @@ pipeline {
         DOCKER_IMAGE = 'elianab/my-web-app' // Docker Hub image name
     }
 
-    stage('Checkout') {
-    steps {
-        git url: 'https://github.com/Elian7773/MyWebApp.git',
-            credentialsId: 'e219755e-6a8a-4d91-addc-5ed2a267b767'
-    }
-}
+    stages {
+        stage('Checkout') {
+            steps {
+                git url: 'https://github.com/Elian7773/MyWebApp.git',
+                    credentialsId: 'e219755e-6a8a-4d91-addc-5ed2a267b767'
+            }
+        }
 
         stage('Build') {
             steps {
@@ -21,22 +22,23 @@ pipeline {
         }
 
         stage('Build Docker Image') {
-    steps {
-        script {
-            dockerImage = docker.build("elian7773/mywebapp:latest")
+            steps {
+                script {
+                    dockerImage = docker.build("elian7773/mywebapp:latest")
+                }
+            }
         }
-    }
-}
 
         stage('Push Docker Image to Docker Hub') {
-    steps {
-        script {
-            docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
-                dockerImage.push()
+            steps {
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
+                        dockerImage.push()
+                    }
+                }
             }
         }
     }
-}
 
     post {
         success {
